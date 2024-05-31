@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package aruco;
+
+// Definición del mensaje para las esquinas de los marcadores
+message MarkerCorners {
+  repeated float corners = 1;
+}
+
+// Definición del mensaje para el centro de los marcadores
+message MarkerCenter {
+  repeated float center = 1;
+}
+
+// Definición del mensaje para los datos del marcador ArUco
+message ArucoMarkerData {
+  int32 id = 1;
+  MarkerCorners corners = 2;
+  MarkerCenter center = 3;
+}
+
+// Definición del mensaje para el resultado de la imagen
+message ImageResult {
+  string b64img = 1;
+  int32 width = 2;
+  int32 height = 3;
+}
+
+// Mensaje de control vacío
+message Empty {}
+
+// Definición del servicio gRPC
+service ArucoDetector {
+  rpc DetectMarkers (Empty) returns (stream ArucoMarkerData);
+  rpc GetImageResult (Empty) returns (ImageResult);
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detected Image</title>
+</head>
+<body>
+    <h1>Detected Image</h1>
+    <img id="detected-image" src="data:image/jpg;base64, {{ image_data }}" alt="Detected Image">
+    <h2>Detected Markers</h2>
+    <ul>
+        {% for marker_id, marker_info in marker_data.items() %}
+            <li>Marker ID: {{ marker_info.id }}</li>
+            <li>Corners: {{ marker_info.corners }}</li>
+            <li>Center: {{ marker_info.center }}</li>
+            <hr>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // Actualiza la imagen cada cierto tiempo
+        setInterval(() => {
+            fetch('/api/image')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('detected-image').src = data;
+                })
+                .catch(error => console.error('Error fetching image:', error));
+        }, 1000);
+    </script>
+</body>
+</html>

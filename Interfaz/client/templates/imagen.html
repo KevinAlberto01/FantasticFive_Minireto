@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aruco Detected</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .content {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            font-size: 36px;
+            color: #333;
+        }
+        .marker-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .marker-info {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            width: 350px;
+        }
+        .marker-info h3, .marker-info h4 {
+            margin: 0; /* Eliminar márgenes para evitar espacio entre líneas */
+            text-align: center;
+            color: #333;
+        }
+        .marker-info h3 {
+            font-size: 24px;
+        }
+        .marker-info h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .marker-info ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .marker-info li {
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 18px;
+        }
+        .marker-info hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Aruco Detected</h1>
+        <img id="detected-image" src="data:image/jpg;base64, {{ image_data }}" alt="Aruco Detected">
+        <h2>Info Markers</h2>
+        <div class="marker-container">
+            {% set subtitles = {6: 'Cubo', 1: 'Area 1', 2: 'Area 2', 3: 'Area 3'} %}
+            {% for marker_id in [6, 1, 2, 3] %}
+                {% if marker_id in marker_data %}
+                    <div class="marker-info">
+                        <h3>Marker ID: {{ marker_data[marker_id].id }}</h3>
+                        <h4>{{ subtitles[marker_id] }}</h4>
+                        <ul>
+                            <li><strong>Corners:</strong> 
+                                <ul>
+                                    <li>[{% for corner in marker_data[marker_id].corners %}{{ corner }}{% if not loop.last %}, {% endif %}{% endfor %}]</li>
+                                </ul>
+                            </li>
+                            <li><strong>Center:</strong> {{ marker_data[marker_id].center }}</li>
+                        </ul>
+                    </div>
+                    {% if not loop.last %}
+                        <hr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        setInterval(() => {
+            fetch('/api/image')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('detected-image').src = data;
+                })
+                .catch(error => console.error('Error fetching image:', error));
+        }, 1000);
+    </script>
+</body>
+</html>

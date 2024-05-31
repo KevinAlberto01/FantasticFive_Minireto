@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marker Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Marker Data</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Corners</th>
+            <th>Center</th>
+        </tr>
+        {% for key, value in marker_data.items() %}
+        <tr>
+            <td>{{ value.id }}</td>
+            <td>{{ value.corners }}</td>
+            <td>{{ value.center }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
